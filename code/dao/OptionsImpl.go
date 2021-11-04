@@ -2,8 +2,8 @@ package dao
 
 import (
 	"log"
-	"spaceclan1/spaceclan-data-gatherer/datasource"
-	"spaceclan1/spaceclan-data-gatherer/models"
+	"spaceclan1/spaceclan-api/datasource"
+	"spaceclan1/spaceclan-api/models"
 )
 
 var (

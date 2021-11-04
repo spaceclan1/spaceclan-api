@@ -1,13 +1,15 @@
 package app_heroestaking
 
 import (
+	"fmt"
 	"github.com/robfig/cron/v3"
 	"log"
 	"runtime"
-	"spaceclan1/spaceclan-data-gatherer/controllers"
+	"spaceclan1/spaceclan-api/controllers"
 )
 
 func StartApplication() {
+	fmt.Println("heroestaking Started")
 	initScheduler()
 	runtime.Goexit()
 }

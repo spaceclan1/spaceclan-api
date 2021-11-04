@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	io "io/ioutil"
 	"net/http"
-	"spaceclan1/spaceclan-data-gatherer/utils/errors"
+	"spaceclan1/spaceclan-api/utils/errors"
 )
 
 type main_controller struct {

@@ -1,4 +1,4 @@
-module spaceclan1/spaceclan-data-gatherer
+module spaceclan1/spaceclan-api
 
 go 1.17
 

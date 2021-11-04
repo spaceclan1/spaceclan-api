@@ -3,8 +3,8 @@ package dao
 import (
 	"fmt"
 	"log"
-	"spaceclan1/spaceclan-data-gatherer/datasource"
-	actions "spaceclan1/spaceclan-data-gatherer/models/actions"
+	"spaceclan1/spaceclan-api/datasource"
+	actions "spaceclan1/spaceclan-api/models/actions"
 	"strings"
 )
 

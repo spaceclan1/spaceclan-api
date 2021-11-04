@@ -3,8 +3,8 @@ package controllers
 import (
 	"fmt"
 	"log"
-	"spaceclan1/spaceclan-data-gatherer/dao"
-	models "spaceclan1/spaceclan-data-gatherer/models/actions"
+	"spaceclan1/spaceclan-api/dao"
+	models "spaceclan1/spaceclan-api/models/actions"
 	"time"
 )
 
