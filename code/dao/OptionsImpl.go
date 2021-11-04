@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 	"spaceclan1/spaceclan-api/datasource"
 	"spaceclan1/spaceclan-api/models"
 )

@@ -3,7 +3,7 @@ package app_heroestaking
 import (
 	"fmt"
 	"github.com/robfig/cron/v3"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"runtime"
 	"spaceclan1/spaceclan-api/controllers"
 )

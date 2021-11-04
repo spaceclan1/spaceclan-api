@@ -2,7 +2,8 @@ package controllers
 
 import (
 	"fmt"
-	"log"
+	log "github.com/sirupsen/logrus"
+	"spaceclan1/spaceclan-api/config"
 	"spaceclan1/spaceclan-api/dao"
 	models "spaceclan1/spaceclan-api/models/actions"
 	"time"
@@ -20,7 +21,7 @@ func (c heroestaking_controller) FetchPoolIncreaseTransactions() {
 	k := "heroestaking_date"
 	od := dao.OptionsImpl.Get(k)
 	ol := dao.OptionsImpl.Get("heroestaking_limit")
-	url := fmt.Sprintf("https://api.waxsweden.org/v2/history/get_actions?limit=%v&account=heroestaking&sort=asc&after=%v", ol.Value, od.Value)
+	url := fmt.Sprintf(config.BuildUrl("get_actions", ol.Value, od.Value))
 	r := models.ActionRes{}
 	err := c.fetchUrl(url, &r)
 	if err != nil {
