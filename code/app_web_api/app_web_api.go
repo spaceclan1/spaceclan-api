@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"spaceclan1/spaceclan-api/controllers"
 )
 
 var (
@@ -20,7 +21,8 @@ func StartApplication() {
 
 func mapUrls() {
 
-	//router.POST("/endpoint1/", controllers.Controller1.Method1)
+	router.GET("/vip2/deposits", controllers.Vip2Controller.GetDeposits)
+	//router.GET("/vip2/month/{:account}", controllers.Vip2Controller.GetMonthlyRewards)
 	//router.GET("/endpoint2", controllers.Controller2.Method2)
 
 	router.NoRoute(func(c *gin.Context) {
