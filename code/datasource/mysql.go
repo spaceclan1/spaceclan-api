@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	log "github.com/sirupsen/logrus"
 	"os"
 )
 
@@ -37,7 +38,6 @@ func init() {
 	//fmt.Print(dbURL)
 	MainDb, err = sql.Open("mysql", dbURL)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 }
