@@ -62,10 +62,10 @@ func (c cacher) SaveAndCacheAggregatedDay(data []models.Heroestaking_transaction
 
 		//to avoid second loop data will be send to redis here
 		k := "DAY:" + d.To + ":" + d.Date
-		k2 := d.To
+		k2 := "DAY_USER" + d.To
 		j, _ := json.Marshal(d)
 		datasource.Rdb.Set(ctx, k, j, config.REDISTTL)
-		datasource.Rdb.SAdd(ctx, k2, d.Date)
+		datasource.Rdb.HSet(ctx, k2, d.Date)
 	}
 	tx.Commit()
 }
@@ -103,10 +103,10 @@ func (c cacher) SaveAndCacheAggregatedMonth(data []models.Heroestaking_transacti
 			log.Fatal(err)
 		}
 		k := "MONTH:" + d.To + ":" + d.Date
-		k2 := d.To
+		k2 := "MONTH_USER:" + d.To
 		j, _ := json.Marshal(d)
 		datasource.Rdb.Set(ctx, k, j, config.REDISTTL)
-		datasource.Rdb.SAdd(ctx, k2, d.Date)
+		datasource.Rdb.HSet(ctx, k2, d.Date)
 	}
 	tx.Commit()
 }
