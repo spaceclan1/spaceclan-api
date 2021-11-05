@@ -81,5 +81,4 @@ func (c cacher_controller) aggregateMonth(t time.Time) {
 	}).Info()
 	aggData := dao.Cacher.GetAggregationMonth(start, end)
 	dao.Cacher.SaveAndCacheAggregatedMonth(aggData)
-
 }

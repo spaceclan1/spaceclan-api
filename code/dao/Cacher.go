@@ -102,11 +102,20 @@ func (c cacher) SaveAndCacheAggregatedMonth(data []models.Heroestaking_transacti
 			tx.Rollback()
 			log.Fatal(err)
 		}
-		k := "MONTH:" + d.To + ":" + d.Date
-		k2 := "MONTH_USER:" + d.To
 		j, _ := json.Marshal(d)
+		k := "MONTH:" + d.Date + ":" + d.Action + ":" + d.From + ":" + d.To + ":" + d.Symbol + ":" + d.Memo + ":"
 		datasource.Rdb.Set(ctx, k, j, config.REDISTTL)
-		datasource.Rdb.HSet(ctx, k2, d.Date)
+		datasource.Rdb.HSet(ctx, "MONTH:"+d.To, k)
+		datasource.Rdb.Set(ctx, "MONTH:"+d.To+":"+d.From, j, config.REDISTTL)
 	}
 	tx.Commit()
+}
+
+func (c cacher) GetMonthlyRewardFromCache(wallet string) {
+	k := "MONTH_USER:" + wallet
+	datasource.Rdb.HGetAll(ctx, k)
+}
+
+func (c cacher) GetDailyRewardFromCache() {
+
 }
