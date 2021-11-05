@@ -10,12 +10,7 @@ import (
 func StartApplication() {
 	log.SetLevel(log.InfoLevel)
 	log.Info("cache started")
-	controllers.CacherController.CacheAndAggregate()
-	//controllers.CacherController.CacheAndAggregate()
-	//controllers.CacherController.CacheAndAggregate()
-	//controllers.CacherController.CacheAndAggregate()
-	//controllers.CacherController.CacheAndAggregate()
-	//initScheduler()
+	initScheduler()
 	runtime.Goexit()
 }
 
