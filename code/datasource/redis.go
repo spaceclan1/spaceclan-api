@@ -8,7 +8,7 @@ var (
 	Rdb *redis.Client
 )
 
-func init() {
+func InitRedis() {
 	Rdb = redis.NewClient(&redis.Options{
 		Addr:     "redis:6379",
 		Password: "", // no password set

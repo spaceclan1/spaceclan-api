@@ -11,7 +11,7 @@ var (
 	MainDb *sql.DB
 )
 
-func init() {
+func InitMysql() {
 	_, found := os.LookupEnv("db_user")
 	if !found {
 		log.Fatal("environment Variable 'db_user' not found")
