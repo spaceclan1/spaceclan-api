@@ -65,7 +65,7 @@ func (c cacher_controller) aggregateDay(t time.Time) {
 		"start": start,
 		"end":   end,
 	}).Info()
-	dao.Cacher.SaveAggregatedDay(aggData)
+	dao.Cacher.SaveAndCacheAggregatedDay(aggData)
 }
 
 func (c cacher_controller) aggregateMonth(t time.Time) {
@@ -80,6 +80,6 @@ func (c cacher_controller) aggregateMonth(t time.Time) {
 		"end":   end,
 	}).Info()
 	aggData := dao.Cacher.GetAggregationMonth(start, end)
-	dao.Cacher.SaveAggregatedMonth(aggData)
+	dao.Cacher.SaveAndCacheAggregatedMonth(aggData)
 
 }

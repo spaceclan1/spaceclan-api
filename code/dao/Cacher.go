@@ -1,6 +1,8 @@
 package dao
 
 import (
+	"context"
+	"encoding/json"
 	log "github.com/sirupsen/logrus"
 	"spaceclan1/spaceclan-api/config"
 	"spaceclan1/spaceclan-api/datasource"
@@ -10,6 +12,7 @@ import (
 
 var (
 	Cacher = &cacher{}
+	ctx    = context.Background()
 )
 
 const (
@@ -38,7 +41,10 @@ func (c cacher) GetAggregation(from time.Time, to time.Time) []models.Heroestaki
 	return l
 }
 
-func (c cacher) SaveAggregatedDay(data []models.Heroestaking_transactions_agg) {
+func (c cacher) SaveAndCacheAggregatedDay(data []models.Heroestaking_transactions_agg) {
+	if len(data) == 0 {
+		return
+	}
 	tx, err := datasource.MainDb.Begin()
 	if err != nil {
 		log.Fatal(err)
@@ -53,6 +59,13 @@ func (c cacher) SaveAggregatedDay(data []models.Heroestaking_transactions_agg) {
 			tx.Rollback()
 			log.Fatal(err)
 		}
+
+		//to avoid second loop data will be send to redis here
+		k := "DAY:" + d.To + ":" + d.Date
+		k2 := d.To
+		j, _ := json.Marshal(d)
+		datasource.Rdb.Set(ctx, k, j, config.REDISTTL)
+		datasource.Rdb.SAdd(ctx, k2, d.Date)
 	}
 	tx.Commit()
 }
@@ -68,13 +81,13 @@ func (c cacher) GetAggregationMonth(from time.Time, to time.Time) []models.Heroe
 	for rows.Next() {
 		o := models.Heroestaking_transactions_agg{}
 		rows.Scan(&o.Action, &o.From, &o.To, &o.Symbol, &o.Memo, &o.Amount)
-		o.Date = from.Format(config.SQL_DATETIME_FORMAT)
+		o.Date = from.Format(config.SQL_DATE_FORMAT)
 		l = append(l, o)
 	}
 	return l
 }
 
-func (c cacher) SaveAggregatedMonth(data []models.Heroestaking_transactions_agg) {
+func (c cacher) SaveAndCacheAggregatedMonth(data []models.Heroestaking_transactions_agg) {
 	tx, err := datasource.MainDb.Begin()
 	if err != nil {
 		log.Fatal(err)
@@ -89,6 +102,11 @@ func (c cacher) SaveAggregatedMonth(data []models.Heroestaking_transactions_agg)
 			tx.Rollback()
 			log.Fatal(err)
 		}
+		k := "MONTH:" + d.To + ":" + d.Date
+		k2 := d.To
+		j, _ := json.Marshal(d)
+		datasource.Rdb.Set(ctx, k, j, config.REDISTTL)
+		datasource.Rdb.SAdd(ctx, k2, d.Date)
 	}
 	tx.Commit()
 }
