@@ -16,12 +16,18 @@ type cacher_controller struct {
 	main_controller
 }
 
-func (c cacher_controller) CacheAndAggregate() {
-	log.Info("started agg")
-	c.aggregate()
+func (c cacher_controller) Cache() {
+	a := dao.Aggregator.GetAggregationDays()
+	dao.Cacher.CacheDay(a)
+	//dao.Cacher.CacheDaysByUser(a)
 }
 
-func (c cacher_controller) aggregate() {
+func (c cacher_controller) Aggregate() {
+	log.Info("started agg")
+	c.startAggregation()
+}
+
+func (c cacher_controller) startAggregation() {
 	t := time.Now()
 	t = t.UTC()
 
@@ -39,6 +45,7 @@ func (c cacher_controller) aggregate() {
 	}).Info()
 	if d > time.Hour*48 {
 		c.aggregateDay(ld)
+		dao.OptionsImpl.Set("day_agg", ld.Truncate(time.Duration(oneDay)).Format(config.SQL_DATE_FORMAT))
 	} else {
 		// aggregate current day
 		c.aggregateDay(t)
@@ -59,13 +66,13 @@ func (c cacher_controller) aggregate() {
 func (c cacher_controller) aggregateDay(t time.Time) {
 	start := t.Truncate(time.Duration(oneDay))
 	end := start.Add(time.Duration(oneDay))
-	aggData := dao.Cacher.GetAggregation(start, end)
+	aggData := dao.Aggregator.GetAggregation(start, end)
 	log.WithFields(log.Fields{
 		"t":     t,
 		"start": start,
 		"end":   end,
 	}).Info()
-	dao.Cacher.SaveAndCacheAggregatedDay(aggData)
+	dao.Aggregator.SaveAggregatedDay(aggData)
 }
 
 func (c cacher_controller) aggregateMonth(t time.Time) {
@@ -79,6 +86,6 @@ func (c cacher_controller) aggregateMonth(t time.Time) {
 		"start": start,
 		"end":   end,
 	}).Info()
-	aggData := dao.Cacher.GetAggregationMonth(start, end)
-	dao.Cacher.SaveAndCacheAggregatedMonth(aggData)
+	aggData := dao.Aggregator.GetAggregationMonth(start, end)
+	dao.Aggregator.SaveAggregatedMonth(aggData)
 }
