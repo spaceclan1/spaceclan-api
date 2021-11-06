@@ -10,13 +10,17 @@ import (
 func StartApplication() {
 	log.SetLevel(log.InfoLevel)
 	log.Info("cache started")
+	controllers.CacherController.Cache()
 	initScheduler()
 	runtime.Goexit()
 }
 
 func initScheduler() {
 	c := cron.New()
-	_, err := c.AddFunc("*/1 * * * *", controllers.CacherController.CacheAndAggregate)
+	_, err := c.AddFunc("*/1 * * * *", func() {
+		controllers.CacherController.Aggregate()
+		controllers.CacherController.Cache()
+	})
 	if err != nil {
 		log.Fatal(err)
 	}

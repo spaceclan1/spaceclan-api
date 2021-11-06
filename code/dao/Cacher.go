@@ -3,7 +3,6 @@ package dao
 import (
 	"context"
 	"encoding/json"
-	log "github.com/sirupsen/logrus"
 	"spaceclan1/spaceclan-api/config"
 	"spaceclan1/spaceclan-api/datasource"
 	"spaceclan1/spaceclan-api/models"
@@ -62,14 +61,19 @@ func (c cacher) CacheDay(a []models.Heroestaking_transactions_agg) {
 			j, _ := json.Marshal(aggs)
 			datasource.Rdb.Set(ctx, "DAY:"+to, j, config.REDISTTL)
 		}
-
-		log.WithField("a", a).Info()
 		for to, agg := range rewards_to {
-			r := datasource.Rdb.HSet(ctx, "REWARD:"+to, agg)
-			log.WithField("r", r).Info()
-			a := datasource.Rdb.HGetAll(ctx, "REWARD:"+to)
-			log.WithField("a", a).Info()
+			for date, amount := range agg {
+				datasource.Rdb.HSet(ctx, "REWARD:"+to, date, amount)
+			}
 		}
-
 	}
+}
+
+func (c cacher) GetRewards(s string) (map[string]string, error) {
+	cm := datasource.Rdb.HGetAll(ctx, "REWARD:"+s)
+	r, err := cm.Result()
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
 }
